@@ -220,16 +220,17 @@ with st.sidebar:
     if _saved_video and _saved_video not in _video_files:
         _video_files = [_saved_video] + _video_files
 
-    if _video_files:
-        _vi = _video_files.index(_saved_video) if _saved_video in _video_files else 0
-        video_path = st.selectbox("Video", _video_files, index=_vi, key="si_video_path")
+    _resource_videos = _scan_files("resource/video", _VIDEO_EXTS)
+    if _resource_videos and _saved_video in _resource_videos:
+        video_path = st.selectbox("Video", _resource_videos, index=_resource_videos.index(_saved_video), key="si_video_path")
     else:
-        video_path = st.text_input(
+        video_path = st.text_area(
             "Video Path",
             value=_saved_video,
             placeholder="/path/to/video.mkv",
+            height=68,
             key="si_video_path",
-        )
+        ).strip()
     if video_path != _saved_video:
         save_config("VIDEO_PATH", video_path)
 

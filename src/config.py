@@ -1,4 +1,8 @@
 import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # ==============================================================================
 # CutClaw global configuration (beginner-friendly version)
@@ -17,10 +21,10 @@ import os
 # ------------------ UI Remembered Inputs ------------------ #
 # These are saved automatically by the app when you change sidebar fields.
 
-VIDEO_PATH = ""
-AUDIO_PATH = ""
-INSTRUCTION = ""
-SRT_PATH = ""
+VIDEO_PATH = "/Users/minho/Library/CloudStorage/OneDrive-개인/Movies/Before Sunrise 1995 Criterion (1080p Bluray x265 HEVC 10bit AAC 2.0 Tigole)/Before Sunrise 1995 Criterion (1080p x265 10bit Tigole).mkv"
+AUDIO_PATH = "/Users/minho/Downloads/서랍.mp3"
+INSTRUCTION = "두 남녀의 행복한 순간과 그 서사를 노래에 맞춰 잘 담아봐."
+SRT_PATH = "/Users/minho/Downloads/tt0112471-en.srt"
 
 
 # ------------------ Video Preprocess ------------------ #
@@ -176,13 +180,13 @@ SCENE_PROMPT_TYPE = VIDEO_TYPE
 VIDEO_ANALYSIS_MODEL_MAX_TOKEN = 16384 
 # Max output token count for the video analysis model.
 
-VIDEO_ANALYSIS_MODEL = ""
+VIDEO_ANALYSIS_MODEL = "gemini/gemini-2.5-flash-lite"
 # Video semantic analysis model name (called via OpenAI-compatible endpoint).
 
 VIDEO_ANALYSIS_ENDPOINT = ""  
 # API base URL for the video analysis model.
 
-VIDEO_ANALYSIS_API_KEY = ""
+VIDEO_ANALYSIS_API_KEY = os.getenv("GEMINI_API_KEY", "")
 # API key for the video analysis model.
 
 CAPTION_BATCH_SIZE = 64
@@ -196,10 +200,10 @@ SCENE_ANALYSIS_MIN_FRAMES = 6
 # ------------------ Audio Model ------------------ #
 # Analyzes musical beat/energy/structure and outputs editing keypoints.
 
-AUDIO_LITELLM_MODEL = ""
+AUDIO_LITELLM_MODEL = "gemini/gemini-2.5-flash-lite"
 # Cloud model used for audio captioning and structure analysis.
 
-AUDIO_LITELLM_API_KEY = ""
+AUDIO_LITELLM_API_KEY = os.getenv("GEMINI_API_KEY", "")
 # API key for the audio model.
 
 AUDIO_LITELLM_BASE_URL = ""
@@ -276,10 +280,10 @@ AUDIO_SILENCE_THRESHOLD_DB = -45.0
 # Segments below this level are treated as too quiet and filtered.
 
 # ----- Audio segment duration constraints (frequently tuned) -----
-AUDIO_MIN_SEGMENT_DURATION = 0.1
+AUDIO_MIN_SEGMENT_DURATION = 0.2
 # Minimum segment duration (seconds). Smaller values create faster cuts.
 
-AUDIO_MAX_SEGMENT_DURATION = 2.0
+AUDIO_MAX_SEGMENT_DURATION = 2.2
 # Maximum segment duration (seconds). Larger values create slower pacing.
 
 # ----- Music structure analysis (Level-1) -----
@@ -328,8 +332,8 @@ AGENT_RATE_LIMIT_BACKOFF_BASE = 1.0
 AGENT_RATE_LIMIT_MAX_BACKOFF = 8.0
 # Backoff timing (seconds) when rate limits occur.
 
-AUDIO_SEGMENT_MIN_DURATION_SEC = 5.0
-AUDIO_SEGMENT_MAX_DURATION_SEC = 15.0
+AUDIO_SEGMENT_MIN_DURATION_SEC = 15.0
+AUDIO_SEGMENT_MAX_DURATION_SEC = 25.0
 # Allowed music-span duration range for short-video planning.
 
 AUDIO_SEGMENT_SELECTION_MAX_RETRIES = 3
@@ -347,10 +351,10 @@ CORE_MAX_FRAMES = 60
 AGENT_LITELLM_URL = ""
 # API base URL for the agent LLM.
 
-AGENT_LITELLM_API_KEY = ""
+AGENT_LITELLM_API_KEY = os.getenv("OPENAI_API_KEY", "")
 # API key for the agent LLM.
 
-AGENT_LITELLM_MODEL = ""
+AGENT_LITELLM_MODEL = "gpt-4o"
 # Primary model for the agent.
 
 PARALLEL_SHOT_ENABLED = True
@@ -383,7 +387,7 @@ FACE_QUALITY_CHECK_METHOD = "vlm"
 
 # ------------------ Protagonist Presence Constraints ------------------ #
 
-MAIN_CHARACTER_NAME = ""
+MAIN_CHARACTER_NAME = "Jesse, Céline"
 # Main character / target subject name (comma-separated for multiple roles).
 # This is one of the highest-impact parameters in object mode.
 
@@ -415,4 +419,8 @@ SCENE_EXPLORATION_RANGE = 3
 # Example: if recommended scene is 8 and range=3, search scene 5~11.
 # Set to 0 to strictly limit selection to recommended scenes only.
 
-
+# Initialize global LiteLLM call cost tracking
+try:
+    import src.litellm_cost_tracker
+except Exception as e:
+    print(f"⚠️ Failed to initialize LiteLLM cost tracker: {e}")

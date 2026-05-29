@@ -64,17 +64,17 @@ def _create_decord_reader(
     global _decord_ctx
 
     def _make_reader(path, ctx, **kwargs):
-        """Try to open VideoReader; fall back to CPU if decord lacks CUDA support."""
+        """Try to open VideoReader; fall back to CPU on any hardware-decoder failure."""
         global _decord_ctx
         try:
             vr = VideoReader(path, ctx=ctx, **kwargs)
             _decord_ctx = ctx  # confirmed working
             return vr
-        except DECORDError as e:
-            if 'CUDA not enabled' in str(e):
-                _decord_ctx = cpu(0)
-                return VideoReader(path, ctx=_decord_ctx, **kwargs)
-            raise
+        except DECORDError:
+            if ctx == cpu(0):
+                raise
+            _decord_ctx = cpu(0)
+            return VideoReader(path, ctx=_decord_ctx, **kwargs)
 
     ctx = _get_decord_ctx()
     if target_resolution is None:

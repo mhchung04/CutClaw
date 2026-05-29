@@ -1,14 +1,14 @@
 # Core pipeline
 numpy
 torch==2.8.0
-decord==0.6.0
+decord2
 scenedetect==0.6.7.1
 av
 Pillow
 tqdm
 litellm
 pydantic
-sentence-transformers
+sentence-transformers<4.0
 scikit-learn
 opencv-python-headless
 
